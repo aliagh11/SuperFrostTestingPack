@@ -78,10 +78,108 @@ def start_clicked():
     Serial_No_entry = tk.Entry(start_window, bg="#D3D3D3", highlightbackground="red", highlightcolor="red", width = 10, justify="center")
     Serial_No_entry.pack()
     Serial_No_entry.place(relx=0.19, rely=0.30, anchor='center')
-    
+
     #Closing start_window button
     close_button = tk.Button(start_window, text="Close", command=start_window.destroy)
     close_button.place(relx=0.50,rely=0.9)
+
+    ##############################################################################################################
+    #################################################### Check-list ##############################################
+    ##############################################################################################################
+
+    # Function to open the checklist window
+    def open_checklist():
+        # Function to update the label with the checklist status
+        def update_status():
+            status = []
+            for i, var in enumerate(check_vars):
+                status.append(f"Item {i+1}: {'✓' if var.get() else '✗'}")
+            status_label.config(text="\n".join(status))
+        # Create a Toplevel window
+        checklist_window = tk.Toplevel(root)
+        checklist_window.title("Checklist")
+        checklist_window.geometry("500x500")
+        checklist_window.resizable(False, False)
+
+        # Frame to hold the checkbuttons and right-align them
+        checklist_frame = tk.Frame(checklist_window)
+        checklist_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        # List of items for the checklist
+        items = ['Item 1', 'Item 2', 'Item 3', 'Item 4']
+
+        # Create a list to store the IntVars associated with each checkbutton
+        check_vars = []
+
+        # Create a Checkbutton for each item
+        for item in items:
+            var = tk.IntVar(value=0)  # 0 for not checked, 1 for checked
+            check_vars.append(var)
+            checkbutton = tk.Checkbutton(checklist_window, text=item, variable=var, command=update_status)
+            checkbutton.pack()
+
+        # Status label to show the checklist status
+        status_label = tk.Label(checklist_window)
+        status_label.pack()
+
+        # Initialize the status label
+        update_status()
+
+        #Function for saving the check-list
+        def save_check_list():
+            #Save the tick and x signs and destroy window.
+            a = 1+1
+
+        #Save check list button
+        Save_checklist_button = tk.Button(checklist_window, text="Save", command = save_check_list)
+        Save_checklist_button.place(relx=0.5, rely=0.5)
+
+    # Button to open the checklist
+    open_checklist_button = tk.Button(start_window, text="Open Checklist", command=open_checklist)
+    open_checklist_button.place(relx=0.1,rely=0.34)
+
+############################################################################################################################################ 
+############################################################################################################################################ 
+
+    ##############################################################################################################
+    #################################################### Plot type ###############################################
+    ##############################################################################################################
+    # plot to show drop-down
+    plot_type_dropdown = tk.Label(start_window, text="Plot type:", font=("Times New Roman", 10))
+    plot_types = ["Temperatures", "Current", "Voltage", "Power"]
+    selected_plot_type = tk.StringVar(start_window)
+    selected_plot_type.set("Select Plot to Show")
+    plot_type_dropdown = tk.OptionMenu(start_window, selected_plot_type, *plot_types)
+    plot_type_dropdown.place(relx=0.055, rely=0.40)
+    plot_type_dropdown["width"] = 20
+
+    ################################################################################################################
+    # --------------------------------------------- saving to data base ------------------------------------------ #
+    ################################################################################################################
+
+    saving_to_db_checkbox = tk.IntVar()
+    saving_to_db_checkbox = tk.Checkbutton(start_window, text="Save to Data Base ", variable=saving_to_db_checkbox)
+    saving_to_db_checkbox.pack()
+    saving_to_db_checkbox.place(relx=0.08,rely=0.47)
+
+    # ------------------------------------------------------------------------------------------------------------ #
+
+    ################################################################################################################
+    # ---------------------------------------------- sending e-mails --------------------------------------------- # 
+    ################################################################################################################
+    sending_email_checkbox = tk.IntVar()
+    sending_email_checkbox = tk.Checkbutton(start_window, text="Send report to R&D team ", variable=saving_to_db_checkbox)
+    sending_email_checkbox.pack()
+    sending_email_checkbox.place(relx=0.057,rely=0.52)
+
+    # ------------------------------------------------------------------------------------------------------------- #
+
+    #################################################################################################################
+    # ------------------------------------------------ STARTING TEST ---------------------------------------------- #
+    #################################################################################################################
+    starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: start_clicked(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
+    starting_test_button.place(relx=0.1, rely=0.58)
+
 
 #Creating Start button
 start_button = tk.Button(root, text=" Start test \n 📈 ", command = lambda: start_clicked(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
