@@ -4,7 +4,7 @@ import pandas as pd
 from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-import numpy as np
+import matplotlib.pyplot as plt
 
 # Create the main window
 root = tk.Tk()
@@ -179,6 +179,16 @@ def start_clicked():
     #################################################################################################################
     starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: start_clicked(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
     starting_test_button.place(relx=0.1, rely=0.58)
+
+    #Plots area
+    fig = Figure(figsize=(6,5), dpi=100)
+    ax = fig.add_subplot(111)
+    ax.grid(True)
+    canvas = FigureCanvasTkAgg(fig, master=start_window)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+    canvas.get_tk_widget().place(relx=0.33, rely=0.05)
+    canvas.get_tk_widget().lift()
 
 
 #Creating Start button
