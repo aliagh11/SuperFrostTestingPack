@@ -38,17 +38,20 @@ def start_clicked():
     
     # Importing excel file function
     def import_excel_file():
+        df = None  # Initialize df to ensure it exists even if no file is selected
         file_path = filedialog.askopenfilename(
-        title="Select an Excel file",
-        filetypes=(("Excel files", "*.xlsx *.xls"), ("All files", "*.*"))
-    )
+            title="Select an Excel file",
+            filetypes=(("Excel files", "*.xlsx *.xls"), ("All files", "*.*"))
+        )
         # Check if a file path was selected
         if file_path:
             try:
                 df = pd.read_excel(file_path)
-                #Here you can process your data :)
+                # Data processing can be done here :)
             except Exception as e:
                 print(f"An error occurred while trying to read the file: {e}")
+
+        return df  # Return the DataFrame (or None if no file was selected)
     
     #Creating importing excel file button
     import_excel_button = tk.Button(start_window, text="Import Excel File", command = lambda: import_excel_file())
@@ -177,10 +180,25 @@ def start_clicked():
     #################################################################################################################
     # ------------------------------------------------ STARTING TEST ---------------------------------------------- #
     #################################################################################################################
-    starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: start_clicked(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
+
+    def plotting(df):
+        if df is not None:  # Make sure df is not None
+            fig = Figure(figsize=(6,5), dpi=100)
+            ax = fig.add_subplot(111)
+            ax.plot(df["Time"], df["T1"])
+            ax.grid(True)
+            canvas = FigureCanvasTkAgg(fig, master=start_window)
+            canvas.draw()
+            canvas.get_tk_widget().pack()
+            canvas.get_tk_widget().place(relx=0.33, rely=0.05)
+            canvas.get_tk_widget().lift()
+        else:
+            print("No DataFrame to plot")
+    
+    starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: plotting(df), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
     starting_test_button.place(relx=0.1, rely=0.58)
 
-    #Plots area
+    #Initial plot for just visual aspect of plots in start window
     fig = Figure(figsize=(6,5), dpi=100)
     ax = fig.add_subplot(111)
     ax.grid(True)
@@ -190,6 +208,8 @@ def start_clicked():
     canvas.get_tk_widget().place(relx=0.33, rely=0.05)
     canvas.get_tk_widget().lift()
 
+    
+        
 
 #Creating Start button
 start_button = tk.Button(root, text=" Start test \n 📈 ", command = lambda: start_clicked(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
