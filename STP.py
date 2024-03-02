@@ -5,6 +5,7 @@ from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+from scipy.signal import find_peaks
 
 # Create the main window
 root = tk.Tk()
@@ -53,9 +54,11 @@ def start_clicked():
 
         return df  # Return the DataFrame (or None if no file was selected)
     
+    df = import_excel_file()
+    
     #Creating importing excel file button
-    import_excel_button = tk.Button(start_window, text="Import Excel File", command = lambda: import_excel_file())
-    import_excel_button.place(relx=0.09, rely=0.17)
+    #import_excel_button = tk.Button(start_window, text="Import Excel File", command = lambda: import_excel_file())
+    #import_excel_button.place(relx=0.09, rely=0.17)
 
     # Refrigerator model selection dropbox
     model_selection_box = tk.Label(start_window, text="Refrigerator Model:", font=("Times New Roman", 10))
@@ -181,21 +184,36 @@ def start_clicked():
     # ------------------------------------------------ STARTING TEST ---------------------------------------------- #
     #################################################################################################################
 
-    def plotting(df):
-        if df is not None:  # Make sure df is not None
-            fig = Figure(figsize=(6,5), dpi=100)
-            ax = fig.add_subplot(111)
-            ax.plot(df["Time"], df["T1"])
-            ax.grid(True)
-            canvas = FigureCanvasTkAgg(fig, master=start_window)
-            canvas.draw()
-            canvas.get_tk_widget().pack()
-            canvas.get_tk_widget().place(relx=0.33, rely=0.05)
-            canvas.get_tk_widget().lift()
-        else:
-            print("No DataFrame to plot")
+    def plotting():
+        fig = Figure(figsize=(6,5), dpi=100)
+        ax = fig.add_subplot(111)
+        ax.plot(df["T1"], color = "blue")
+
+        # Find maxima
+        peaks, _ = find_peaks(df['T1'])
+
+        # Find minima by inverting the data and using the same function
+        troughs, _ = find_peaks(-df['T1'])
+        # Plot the original data
+        ax.plot(df['T1'], label='Data')
+
+        # Plot maxima
+        ax.plot(df['T1'][peaks], 'x', label='Maxima', color='red')
+
+        # Plot minima
+        ax.plot(df['T1'][troughs], 'o', label='Minima', color='green')
+
+        # Show legend
+        plt.legend() 
+
+        ax.grid(True)
+        canvas = FigureCanvasTkAgg(fig, master=start_window)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+        canvas.get_tk_widget().place(relx=0.33, rely=0.05)
+        canvas.get_tk_widget().lift()
     
-    starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: plotting(df), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
+    starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: plotting(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
     starting_test_button.place(relx=0.1, rely=0.58)
 
     #Initial plot for just visual aspect of plots in start window
