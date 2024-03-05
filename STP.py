@@ -179,7 +179,6 @@ def start_clicked():
     sending_email_checkbox.place(relx=0.057,rely=0.52)
 
     # ------------------------------------------------------------------------------------------------------------- #
-
     #################################################################################################################
     # ------------------------------------------------ STARTING TEST ---------------------------------------------- #
     #################################################################################################################
@@ -212,6 +211,10 @@ def start_clicked():
         canvas.get_tk_widget().pack()
         canvas.get_tk_widget().place(relx=0.33, rely=0.05)
         canvas.get_tk_widget().lift()
+
+        #Time table for device ON/OFF
+        for i in range(len(peaks)):
+            time_table = peaks[i] - troughs[i]
     
     starting_test_button = tk.Button(start_window, text=" Start test \n 📈 ", command = lambda: plotting(), font=('Lucida Handwriting', 9, 'bold'), bg="#FF7F7F")
     starting_test_button.place(relx=0.1, rely=0.58)
@@ -225,6 +228,7 @@ def start_clicked():
     canvas.get_tk_widget().pack()
     canvas.get_tk_widget().place(relx=0.33, rely=0.05)
     canvas.get_tk_widget().lift()
+
 
     
         
